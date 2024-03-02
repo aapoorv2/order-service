@@ -1,6 +1,7 @@
 package com.swiggy.order.entities;
 
 import com.swiggy.order.enums.Status;
+import com.swiggy.order.models.dto.ItemDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,17 +15,32 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "orders")
 public class Order {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ElementCollection
     @CollectionTable(name = "order_items", joinColumns = @JoinColumn(name = "order_id"))
-    @Column(name = "item_id")
-    private List<Long> itemIds;
+    private List<ItemDTO> items;
 
     private Money totalPrice;
-    
+
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    public Order(List<ItemDTO> items) {
+        this.items = items;
+        this.status = Status.UNASSIGNED;
+        this.totalPrice = calculateTotalPrice(items);
+    }
+
+    private Money calculateTotalPrice(List<ItemDTO> items) {
+        Money total = new Money();
+        for (ItemDTO item : items) {
+            total = total.add(item.getPrice());
+        }
+        return total;
+    }
 }
