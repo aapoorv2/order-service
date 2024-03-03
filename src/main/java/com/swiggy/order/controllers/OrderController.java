@@ -1,5 +1,6 @@
 package com.swiggy.order.controllers;
 
+import com.swiggy.order.exceptions.OrderNotFoundException;
 import com.swiggy.order.models.requests.OrderRequest;
 import com.swiggy.order.models.responses.OrderResponse;
 import com.swiggy.order.services.OrderService;
@@ -19,7 +20,12 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    ResponseEntity<OrderResponse> fetch(@PathVariable Long id) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.fetch(id));
+    ResponseEntity<?> fetch(@PathVariable Long id) {
+        try {
+            OrderResponse response = orderService.fetch(id);
+            return ResponseEntity.ok().body(response);
+        } catch (OrderNotFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 }
