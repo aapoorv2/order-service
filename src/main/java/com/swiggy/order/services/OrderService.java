@@ -29,7 +29,7 @@ public class OrderService {
 
         Order order = new Order(items);
         orderRepository.save(order);
-        return "Created an order with id:" + order.getId();
+        return "Created an order with id: " + order.getId();
     }
 
     public OrderResponse fetch(Long id) {
