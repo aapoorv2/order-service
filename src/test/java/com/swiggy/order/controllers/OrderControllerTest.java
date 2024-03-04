@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -40,6 +41,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testCreatingAnOrder_success() throws Exception {
         String request = new ObjectMapper().writeValueAsString(new OrderRequest(1L, List.of(1L, 2L)));
         String expectedResponse = "Created an order with id: 1";
@@ -55,6 +57,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testFetchingAnOrder_success() throws Exception {
         ItemDTO itemOne = new ItemDTO(1L, "item 1", new Money(10.0, Currency.INR));
         ItemDTO itemTwo = new ItemDTO(2L, "item 2", new Money(10.0, Currency.INR));
@@ -72,6 +75,7 @@ class OrderControllerTest {
     }
 
     @Test
+    @WithMockUser
     void testFetchingAnOrderWithInvalidId_expectErrorResponse() throws Exception {
         when(orderService.fetch(1L)).thenThrow(new OrderNotFoundException("Order with id 1 not found"));
 

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -27,5 +29,10 @@ public class OrderController {
         } catch (OrderNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("")
+    ResponseEntity<List<OrderResponse>> fetchAll() {
+        return ResponseEntity.ok().body(orderService.fetchAll());
     }
 }

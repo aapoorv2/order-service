@@ -22,7 +22,7 @@ public class UserService {
         }
         User user = User.builder()
                     .username(username)
-                    .password(password)
+                    .password(encoder.encode(password))
                     .city(city)
                     .build();
 

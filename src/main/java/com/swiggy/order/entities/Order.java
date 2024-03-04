@@ -16,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "orders")
+
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +34,8 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    public Order(List<ItemDTO> items) {
+    public Order(User user, List<ItemDTO> items) {
+        this.user = user;
         this.items = items;
         this.status = Status.UNASSIGNED;
         this.totalPrice = calculateTotalPrice(items);
