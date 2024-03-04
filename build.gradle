@@ -23,6 +23,8 @@ dependencies {
 	runtimeOnly 'com.h2database:h2'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
+	implementation "org.springframework.boot:spring-boot-starter-security"
+	testImplementation 'org.springframework.security:spring-security-test:6.2.1'
 	// https://mvnrepository.com/artifact/org.postgresql/postgresql
 	implementation 'org.postgresql:postgresql:42.7.1'
 	compileOnly 'org.apache.tomcat:annotations-api:6.0.53' // necessary for Java 9+

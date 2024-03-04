@@ -21,6 +21,9 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    private User user;
+
     @ElementCollection
     @CollectionTable(name = "order_items", joinColumns = @JoinColumn(name = "order_id"))
     private List<ItemDTO> items;
