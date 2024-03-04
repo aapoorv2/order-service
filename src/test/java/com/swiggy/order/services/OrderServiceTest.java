@@ -101,5 +101,27 @@ class OrderServiceTest {
         verify(orderRepository, times(1)).findById(1L);
     }
 
+    @Test
+    void testFetchingAllItems_success() {
+        String username = "user";
+        User user = new User(1L, username, "test_pass", City.DELHI);
+        when(authentication.getName()).thenReturn(username);
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        SecurityContextHolder.setContext(securityContext);
+        when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        ItemDTO item = new ItemDTO();
+        Order firstOrder = new Order(1L, user, List.of(item), new Money(10.0, Currency.INR), Status.UNASSIGNED);
+        Order secondOrder = new Order(2L, user, List.of(item), new Money(10.0, Currency.INR), Status.UNASSIGNED);
+        when(orderRepository.findByUser(user)).thenReturn(List.of(firstOrder, secondOrder));
+        OrderResponse firstResponse = new OrderResponse(1L, firstOrder.getItems(), firstOrder.getTotalPrice(), firstOrder.getStatus());
+        OrderResponse secondResponse = new OrderResponse(2L, secondOrder.getItems(), secondOrder.getTotalPrice(), secondOrder.getStatus());
+        List<OrderResponse> expected = List.of(firstResponse, secondResponse);
+
+        List<OrderResponse> responses = orderService.fetchAll();
+
+        assertEquals(expected, responses);
+
+    }
+
 
 }

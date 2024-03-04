@@ -2,6 +2,9 @@ package com.swiggy.order.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.swiggy.order.entities.Money;
+import com.swiggy.order.entities.Order;
+import com.swiggy.order.entities.User;
+import com.swiggy.order.enums.City;
 import com.swiggy.order.enums.Currency;
 import com.swiggy.order.enums.Status;
 import com.swiggy.order.exceptions.OrderNotFoundException;
@@ -87,4 +90,25 @@ class OrderControllerTest {
         verify(orderService, times(1)).fetch(1L);
     }
 
+    @Test
+    @WithMockUser
+    void testFetchingAllItems_success() throws Exception {
+        String username = "user";
+        User user = new User(1L, username, "test_pass", City.DELHI);
+        ItemDTO item = new ItemDTO();
+        Order firstOrder = new Order(1L, user, List.of(item), new Money(10.0, Currency.INR), Status.UNASSIGNED);
+        Order secondOrder = new Order(2L, user, List.of(item), new Money(10.0, Currency.INR), Status.UNASSIGNED);
+        OrderResponse firstResponse = new OrderResponse(1L, firstOrder.getItems(), firstOrder.getTotalPrice(), firstOrder.getStatus());
+        OrderResponse secondResponse = new OrderResponse(2L, secondOrder.getItems(), secondOrder.getTotalPrice(), secondOrder.getStatus());
+        List<OrderResponse> expectedResponse = List.of(firstResponse, secondResponse);
+        String expectedString = new ObjectMapper().writeValueAsString(expectedResponse);
+        when(orderService.fetchAll()).thenReturn(expectedResponse);
+
+        mvc.perform(MockMvcRequestBuilders.get("/orders")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(expectedString));
+        verify(orderService, times(1)).fetchAll();
+    }
 }
