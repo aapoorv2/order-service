@@ -1,0 +1,49 @@
+syntax = "proto3";
+package fulfillment;
+option go_package = "fulfillment";
+service FulFillment {
+  rpc AssignDeliveryAgent (AssignRequest) returns (AssignResponse);
+  rpc RegisterDeliveryAgent (RegisterRequest) returns (RegisterResponse);
+  rpc UpdateDeliveryAgentAvailability (UpdateRequest) returns (UpdateResponse);
+  rpc FetchAllDeliveriesForAnAgent (FetchDeliveriesRequest) returns (FetchDeliveriesResponse);
+}
+
+message RegisterRequest {
+  string username = 1;
+  string password = 2;
+  string city = 3;
+}
+
+message RegisterResponse {
+  string message = 1;
+}
+
+message AssignRequest {
+  int64 order_id = 1;
+  string city = 2;
+}
+
+message AssignResponse {
+  string message = 1;
+}
+
+message UpdateRequest {}
+
+message UpdateResponse {
+  string message = 1;
+}
+
+message FetchDeliveriesRequest {}
+
+message Delivery {
+  uint64 id = 1;
+  uint64 order_id = 2;
+  string city = 3;
+}
+
+message FetchDeliveriesResponse {
+  repeated Delivery deliveries = 1;
+}
+
+// export PATH="$PATH:$(go env GOPATH)/bin"
+// protoc -Ifulfillment --go_out=.  --go_opt=module=fulfillment --go-grpc_out=. --go-grpc_opt=module=fulfillment fulfillment/fulfillment.proto

@@ -29,6 +29,7 @@ public class OrderService {
     @Autowired
     private UserRepository userRepository;
 
+
     public String create(Long restaurantId, List<Long> itemIds) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username).orElseThrow();
@@ -37,6 +38,8 @@ public class OrderService {
                 .collect(Collectors.toList());
 
         Order order = new Order(user, items);
+        orderRepository.save(order);
+        order.assignAgent();
         orderRepository.save(order);
         return "Created an order with id: " + order.getId();
     }
@@ -59,5 +62,12 @@ public class OrderService {
             responses.add(new OrderResponse(order.getId(), order.getItems(), order.getTotalPrice(), order.getStatus()));
         }
         return responses;
+    }
+
+    public String deliver(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new OrderNotFoundException("Order with id " + id + " not found"));
+        order.deliver();
+        orderRepository.save(order);
+        return "Successfully delivered the order!";
     }
 }

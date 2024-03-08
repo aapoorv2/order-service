@@ -2,7 +2,10 @@ package com.swiggy.order.entities;
 
 import com.swiggy.order.enums.Status;
 import com.swiggy.order.models.dto.ItemDTO;
+import com.swiggy.order.services.AssignmentService;
+import io.grpc.StatusRuntimeException;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -47,5 +50,15 @@ public class Order {
             total = total.add(item.getPrice());
         }
         return total;
+    }
+    @Transactional
+    public void assignAgent() {
+        AssignmentService.assignAgent(this.id, this.user.getCity());
+        this.status = Status.ASSIGNED;
+    }
+
+    @Transactional
+    public void deliver() {
+        this.status = Status.DELIVERED;
     }
 }
