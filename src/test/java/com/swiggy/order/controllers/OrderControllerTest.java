@@ -61,6 +61,20 @@ class OrderControllerTest {
 
     @Test
     @WithMockUser
+    void testDeliveringAnOrder_success() throws Exception {
+        String expectedResponse = "Created an order with id: 1";
+        when(orderService.deliver(1L)).thenReturn(expectedResponse);
+
+        mvc.perform(MockMvcRequestBuilders.put("/orders")
+                        .content(String.valueOf(1L))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content()
+                        .string(expectedResponse));
+        verify(orderService, times(1)).deliver(1L);
+    }
+    @Test
+    @WithMockUser
     void testFetchingAnOrder_success() throws Exception {
         ItemDTO itemOne = new ItemDTO(1L, "item 1", new Money(10.0, Currency.INR));
         ItemDTO itemTwo = new ItemDTO(2L, "item 2", new Money(10.0, Currency.INR));
@@ -111,5 +125,6 @@ class OrderControllerTest {
                         .string(expectedString));
         verify(orderService, times(1)).fetchAll();
     }
+
 
 }

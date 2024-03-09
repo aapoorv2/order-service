@@ -1,6 +1,5 @@
 package com.swiggy.order.services;
 
-import com.swiggy.order.controllers.UserController;
 import com.swiggy.order.entities.Money;
 import com.swiggy.order.entities.Order;
 import com.swiggy.order.entities.User;
@@ -14,8 +13,10 @@ import com.swiggy.order.repositories.OrderRepository;
 import com.swiggy.order.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,6 +28,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.openMocks;
+
 
 class OrderServiceTest {
     @Mock
@@ -44,6 +46,7 @@ class OrderServiceTest {
     @BeforeEach
     void setup() {
         openMocks(this);
+        mockStatic(AssignmentService.class);
     }
     @Test
     void testCreateOrder_success() {
@@ -63,7 +66,7 @@ class OrderServiceTest {
 
         verify(catalogService, times(1)).getItemById(1L, 1L);
         verify(catalogService, times(1)).getItemById(1L, 2L);
-        verify(orderRepository, times(1)).save(any(Order.class));
+        verify(orderRepository, times(2)).save(any(Order.class));
     }
 
     @Test
