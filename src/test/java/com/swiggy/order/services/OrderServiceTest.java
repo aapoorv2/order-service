@@ -46,7 +46,6 @@ class OrderServiceTest {
     @BeforeEach
     void setup() {
         openMocks(this);
-        mockStatic(AssignmentService.class);
     }
     @Test
     void testCreateOrder_success() {
@@ -61,6 +60,7 @@ class OrderServiceTest {
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
+        mockStatic(AssignmentService.class);
 
         orderService.create(1L, itemIds);
 
