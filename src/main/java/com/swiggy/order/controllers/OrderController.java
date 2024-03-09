@@ -26,8 +26,8 @@ public class OrderController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    @PutMapping("")
-    ResponseEntity<String> deliver(@RequestBody Long id) {
+    @PutMapping("/{id}")
+    ResponseEntity<String> deliver(@PathVariable Long id) {
         return ResponseEntity.ok().body(orderService.deliver(id));
     }
     @GetMapping("/{id}")
