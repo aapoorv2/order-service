@@ -1,5 +1,6 @@
 package com.swiggy.order.services;
 
+import com.swiggy.order.adapters.CatalogServiceAdapter;
 import com.swiggy.order.entities.Order;
 import com.swiggy.order.entities.User;
 import com.swiggy.order.exceptions.UserNotFoundException;
@@ -21,7 +22,7 @@ import com.swiggy.order.exceptions.OrderNotFoundException;
 public class OrderService {
 
     @Autowired
-    private CatalogService catalogService;
+    private CatalogServiceAdapter catalogServiceAdapter;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -34,7 +35,7 @@ public class OrderService {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         User user = userRepository.findByUsername(username).orElseThrow();
         List<ItemDTO> items = itemIds.stream()
-                .map(itemId -> catalogService.getItemById(restaurantId, itemId))
+                .map(itemId -> catalogServiceAdapter.getItemById(restaurantId, itemId))
                 .collect(Collectors.toList());
 
         Order order = new Order(user, items);

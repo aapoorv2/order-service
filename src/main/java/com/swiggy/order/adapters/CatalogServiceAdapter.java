@@ -1,4 +1,4 @@
-package com.swiggy.order.services;
+package com.swiggy.order.adapters;
 
 import com.swiggy.order.models.dto.ItemDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class CatalogService {
+public class CatalogServiceAdapter {
     @Value("${catalog.service.url}")
     private String catalogServiceUrl;
 

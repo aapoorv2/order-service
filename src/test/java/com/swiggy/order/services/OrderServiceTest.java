@@ -1,5 +1,7 @@
 package com.swiggy.order.services;
 
+import com.swiggy.order.adapters.AssignmentServiceAdapter;
+import com.swiggy.order.adapters.CatalogServiceAdapter;
 import com.swiggy.order.entities.Money;
 import com.swiggy.order.entities.Order;
 import com.swiggy.order.entities.User;
@@ -36,7 +38,7 @@ class OrderServiceTest {
     @Mock
     UserRepository userRepository;
     @Mock
-    CatalogService catalogService;
+    CatalogServiceAdapter catalogServiceAdapter;
     @Mock
     Authentication authentication;
     @Mock
@@ -54,18 +56,18 @@ class OrderServiceTest {
         String username = "user";
         User user = new User(1L, username, "pass", City.DELHI);
         List<Long> itemIds = Arrays.asList(1L, 2L);
-        when(catalogService.getItemById(1L, 1L)).thenReturn(itemOne);
-        when(catalogService.getItemById(1L, 2L)).thenReturn(itemTwo);
+        when(catalogServiceAdapter.getItemById(1L, 1L)).thenReturn(itemOne);
+        when(catalogServiceAdapter.getItemById(1L, 2L)).thenReturn(itemTwo);
         when(authentication.getName()).thenReturn(username);
         when(securityContext.getAuthentication()).thenReturn(authentication);
         SecurityContextHolder.setContext(securityContext);
         when(userRepository.findByUsername(username)).thenReturn(Optional.of(user));
-        mockStatic(AssignmentService.class);
+        mockStatic(AssignmentServiceAdapter.class);
 
         orderService.create(1L, itemIds);
 
-        verify(catalogService, times(1)).getItemById(1L, 1L);
-        verify(catalogService, times(1)).getItemById(1L, 2L);
+        verify(catalogServiceAdapter, times(1)).getItemById(1L, 1L);
+        verify(catalogServiceAdapter, times(1)).getItemById(1L, 2L);
         verify(orderRepository, times(2)).save(any(Order.class));
     }
 

@@ -2,8 +2,7 @@ package com.swiggy.order.entities;
 
 import com.swiggy.order.enums.Status;
 import com.swiggy.order.models.dto.ItemDTO;
-import com.swiggy.order.services.AssignmentService;
-import io.grpc.StatusRuntimeException;
+import com.swiggy.order.adapters.AssignmentServiceAdapter;
 import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -53,7 +52,7 @@ public class Order {
     }
     @Transactional
     public void assignAgent() {
-        AssignmentService.assignAgent(this.id, this.user.getCity());
+        AssignmentServiceAdapter.assignAgent(this.id, this.user.getCity());
         this.status = Status.ASSIGNED;
     }
 

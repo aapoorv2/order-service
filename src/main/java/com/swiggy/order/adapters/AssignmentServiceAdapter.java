@@ -1,4 +1,4 @@
-package com.swiggy.order.services;
+package com.swiggy.order.adapters;
 
 import com.swiggy.order.enums.City;
 import fulfillment.FulFillmentGrpc;
@@ -9,7 +9,7 @@ import jakarta.annotation.PreDestroy;
 
 import java.util.concurrent.TimeUnit;
 
-public class AssignmentService {
+public class AssignmentServiceAdapter {
     private static final ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 9000)
             .usePlaintext()
             .build();;
