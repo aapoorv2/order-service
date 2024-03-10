@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import static com.swiggy.order.constants.Error.USER_ALREADY_EXISTS;
+import static com.swiggy.order.constants.Success.USER_CREATED;
+
 @Service
 public class UserService {
     @Autowired
@@ -18,7 +21,7 @@ public class UserService {
     public String register(String username, String password, City city) {
         User existingUser = userRepository.findByUsername(username).orElse(null);
         if (existingUser != null) {
-            throw new UserAlreadyExistsException("Username already exists");
+            throw new UserAlreadyExistsException(USER_ALREADY_EXISTS);
         }
         User user = User.builder()
                     .username(username)
@@ -27,6 +30,6 @@ public class UserService {
                     .build();
 
         userRepository.save(user);
-        return "User created with id " + user.getId();
+        return USER_CREATED + user.getId();
     }
 }

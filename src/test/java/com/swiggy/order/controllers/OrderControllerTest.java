@@ -27,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
+import static com.swiggy.order.constants.Success.ORDER_DELIVERED;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
@@ -62,10 +63,10 @@ class OrderControllerTest {
     @Test
     @WithMockUser
     void testDeliveringAnOrder_success() throws Exception {
-        String expectedResponse = "Created an order with id: 1";
+        String expectedResponse = ORDER_DELIVERED;
         when(orderService.deliver(1L)).thenReturn(expectedResponse);
 
-        mvc.perform(MockMvcRequestBuilders.put("/orders")
+        mvc.perform(MockMvcRequestBuilders.put("/orders/1")
                         .content(String.valueOf(1L))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
